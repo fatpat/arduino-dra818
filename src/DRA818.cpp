@@ -144,7 +144,8 @@ int DRA818::handshake() {
 }
 
 int DRA818::scan(float freq) {
-  char buf[10];
+  char buf[9];
+
   dtostrf(freq, 8, 4, buf);
 
   LOG(println, F("DRA818::scan"));
