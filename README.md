@@ -3,6 +3,34 @@ Arduino library for DRA818 VHF/UHF Band Voice Transceiver.
 
 Don't bother with the DRA818 API, just plug the RX/TX pin to the arduino, include <DRA818.h> and you're good to go. You can use either the builtin UART [HardwareSoftware](https://www.arduino.cc/en/Reference/HardwareSoftware) or two digital pins of your choice and the [SoftwareSerial](https://www.arduino.cc/en/Reference/SoftwareSerial) library.
 
+## Usage
+:warning: The DRA818 module is powered with 3.3v and use 3.3v TTL. If a 5v arduino is used, you should convert the 5v TX pin of the arduino to the 3.3v RX pin of the DRA818. The arduino RX will be able to detect correct TTL sent as-is (3.3v) from the TX pin of the DRA818.
+
+You can use this library in the *object style* or with a simple configuration call. Here is a sample code snippet with both usage:
+```
+#include <SoftwareSerial.h>
+#include <DRA818.h>
+
+dra_serial *SoftwareSerial;
+dra *DRA818;
+
+void setup() {
+ dra_serial = new SoftwareSerial(3, 4); // use pin 3 and 4 for serial communication to DRA818
+ 
+ // all in one configuration
+ dra = DRA818::configure(dra_serial, DRA818_VHF, 145.500, 145.500, 4, 8, 0, 0, DRA818_12K5, true, true, true);
+ 
+ // object-style configuration
+ dra = new DRA818(dra_serial, DRA818_VHF);
+ dra->handshake();
+ dra->group(DRA818_12K5, 145.500, 145.500, 0, 4, 0);
+ dra->volume(8);
+ dra->filters(true, true, true);
+}
+void loop() {
+}
+```
+
 ## API
 ### Constructor
 #### HardwareSerial
