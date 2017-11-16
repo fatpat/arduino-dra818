@@ -2,66 +2,52 @@
 #include <SoftwareSerial.h>
 #include "DRA818.h"
 
-#define PD      10  // Power Down pin. This need to start low, then be set high before programming.
-#define RX      4
-#define TX      3
+/* Used Pins */
+#define PD      10  // to the DRA818 PD pin
+#define RX      3   // arduino serial RX pin to the DRA818 TX pin
+#define TX      4   // arduino serial TX pin to the DRA818 RX pin
 
-#define RX_FREQ     146.050
-#define TX_FREQ     146.050
-#define VOLUME      8 // we wan't max output to ensure DTMF encore will be able to decode tones
-#define SQUELCH     4
-#define RX_CTCSS    0
-#define TX_CTCSS    0
-#define BANDWIDTH   DRA818_12K5
-
-#define LOGw(a)     (Serial.write(a))
-#define LOG(a)      (Serial.print(a))
-#define LOGs(a)     (Serial.print(F(a)))
-#define LOGln(a)    (Serial.println(a))
-
-
-SoftwareSerial *dra_serial;
-DRA818 *dra;
-
-float freq;
+SoftwareSerial *dra_serial; // Serial connection to DRA818
+DRA818 *dra;                // the DRA object once instanciated
+float freq;                 // the next frequency to scan
 
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(9600); // for logging
 
-  LOGln("Booting ...");
+  Serial.println("Booting ...");
 
-  LOGs("initializing I/O ... ");
-  
-  dra_serial = new SoftwareSerial(TX, RX); // Instantiate the Software Serial Object.
-  pinMode(PD, OUTPUT);
-  digitalWrite(PD,LOW);
-  LOGln("done");
+  Serial.print("initializing I/O ... ");  
+  dra_serial = new SoftwareSerial(RX, TX); // Instantiate the Software Serial Object.
+  pinMode(PD, OUTPUT);                     // Power control of the DRA818
+  digitalWrite(PD,HIGH);                    // start at low power
+  Serial.println("done");
 
-  // Now we configure the DRA818
-  LOGs("initializing DRA818 ... ");
-  digitalWrite(PD, HIGH); // we need high power for programming
-  dra = DRA818::configure(dra_serial, DRA818_VHF, RX_FREQ, TX_FREQ, SQUELCH, VOLUME, RX_CTCSS, TX_CTCSS, BANDWIDTH, true, true, true);
+  Serial.print("initializing DRA818 ... ");
+  /*
+   * Configure DRA818V using 145.500 MHz, squelch 4, volume 8, no ctcss, 12.5 kHz bandwidth, all filters activated
+   */
+  dra = DRA818::configure(dra_serial, DRA818_VHF, 145.500, 145.500, 4, 8, 0, 0, DRA818_12K5, true, true, true);
   if (!dra) {
-    LOGln("\nError while configuring DRA818");
+    Serial.println("\nError while configuring DRA818");
   }
   freq = DRA818_VHF_MIN;
 
-  LOGln("done");
+  Serial.println("done");
 
-  LOGln("Starting ... ");
+  Serial.println("Starting ... ");
 }
 
-int vol = 1;
 void loop(){
-  if (!dra) {
-    return;
-  }
   char buf[9];
-  dtostrf(freq, 8, 4, buf);
-  LOG(String("Scanning frequency ") +  String(buf) + String(" kHz ..."));
-  if (dra->scan(freq)) LOG("Found");
-  LOGln("");
+
+  if (!dra) return; // do nothing if DRA configuration failed
+
+  dtostrf(freq, 8, 4, buf);  // convert frequency to string with right precision
+  Serial.print(String("Scanning frequency ") +  String(buf) + String(" kHz ..."));
+  /* scan the frequency */
+  if (dra->scan(freq)) Serial.print("Found");
+  Serial.println("");
   
   freq += 0.0125; //12.5kHz step
-  if (freq > DRA818_VHF_MAX) freq = DRA818_VHF_MIN;
+  if (freq > DRA818_VHF_MAX) freq = DRA818_VHF_MIN; // when DRA818_VHF_MAX (174.0) is reached, start over at DRA818_VHF_MIN (134.0)
 }
