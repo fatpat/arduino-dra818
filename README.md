@@ -3,6 +3,9 @@ Arduino library for DRA818 VHF/UHF Band Voice Transceiver.
 
 Don't bother with the DRA818 API, just plug the RX/TX pin to the arduino, include <DRA818.h> and you're good to go. You can use either the builtin UART [HardwareSoftware](https://www.arduino.cc/en/Reference/HardwareSoftware) or two digital pins of your choice and the [SoftwareSerial](https://www.arduino.cc/en/Reference/SoftwareSerial) library.
 
+## Installation
+Download the last release and in arduino IDE, in the menu, select `Sketch` / `Include Library` / `Add .ZIP Library` and choose the downloaded file. You should see DRA sample files.
+
 ## Usage
 :warning: The DRA818 module is powered with 3.3v and use 3.3v TTL. If a 5v arduino is used, you should convert the 5v TX pin of the arduino to the 3.3v RX pin of the DRA818. The arduino RX will be able to detect correct TTL sent as-is (3.3v) from the TX pin of the DRA818.
 
