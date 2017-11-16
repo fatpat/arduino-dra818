@@ -116,7 +116,10 @@ int DRA818::group(uint8_t bw, float freq_tx, float freq_rx, uint8_t ctcss_tx, ui
 
   dtostrf(freq_tx, 8, 4, buf_rx);
   dtostrf(freq_rx, 8, 4, buf_tx);
+
   sprintf(buffer, "AT+DMOSETGROUP=%01d,%s,%s,%04d,%c,%04d\r\n", bw, buf_tx, buf_rx, ctcss_tx, squelch + '0', ctcss_rx);
+
+  LOG(println, F("DRA818::group"));
   LOG(print, F("-> "));
   SEND(buffer);
 
@@ -126,8 +129,11 @@ int DRA818::group(uint8_t bw, float freq_tx, float freq_rx, uint8_t ctcss_tx, ui
 int DRA818::handshake() {
   char i = HANDSHAKE_REPEAT;
 
+
   while (i-- > 0) {
+    LOG(println, F("DRA818::handshake"));
     LOG(print, F("-> "));
+
     SEND("AT+DMOCONNECT\r\n");
     if (this->read_response()) {
       return true;
@@ -141,10 +147,13 @@ int DRA818::scan(float freq) {
   char buf[10];
   dtostrf(freq, 8, 4, buf);
 
+  LOG(println, F("DRA818::scan"));
   LOG(print, F("-> "));
+
   SEND("S+");
   SEND(buf);
   SEND("\r\n");
+
   return read_response();
 }
 
@@ -152,7 +161,9 @@ int DRA818::volume(uint8_t volume) {
   CHECK(volume, >, VOLUME_MAX);
   CHECK(volume, <, VOLUME_MIN);
 
+  LOG(println, F("DRA818::volume"));
   LOG(print, F("-> "));
+
   SEND("AT+DMOSETVOLUME=");
   SEND(volume + '0');
   SEND("\r\n");
@@ -161,7 +172,9 @@ int DRA818::volume(uint8_t volume) {
 }
 
 int DRA818::filters(bool pre, bool high, bool low) {
+  LOG(println, F("DRA818::filters"));
   LOG(print, F("-> "));
+
   SEND("AT+SETFILTER=");
   SEND('0' + (char)pre);
   SEND(",");
