@@ -41,7 +41,11 @@
   -> S+134.0125
   <- S=1
   Returned value=0
- 
+
+    I'm using a digital pin (D10) to crontrol the PD pin of the DRA818. 
+  It's not mandatory, you can just let the PD pin of the DRA818 
+  to HIGH and free an arduino digital pin.
+
 
   Copyright (c) 2017, Jerome LOYET
 
@@ -88,6 +92,14 @@ void setup(){
   /*
    * Configure DRA818V using 145.500 MHz, squelch 4, volume 8, no ctcss, 12.5 kHz bandwidth, all filters activated
    * We add the &Serial parameter to tell the DRA object where to log its debug information (to the builtin serial)
+   *
+   * Alternative call:
+   *  dra = new DRA818(dra_serial, DRA818_VHF);
+   *  dra->set_log(&Serial);
+   *  dra->handshake();
+   *  dra->group(DRA818_12K5, 145.500, 145.500, 0, 4, 0);
+   *  dra->volume(8);
+   *  dra->filters(true, true, true);
    */
   dra = DRA818::configure(dra_serial, DRA818_VHF, 145.500, 145.500, 4, 8, 0, 0, DRA818_12K5, true, true, true, &Serial);
   if (!dra) {
