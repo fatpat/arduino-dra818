@@ -1,5 +1,8 @@
 # arduino_dra818
-Arduino library for DRA818 VHF/UHF Band Voice Transceiver
+Arduino library for DRA818 VHF/UHF Band Voice Transceiver.
+
+Don't bother with the DRA818 API, just plug the RX/TX pin to the arduino, include <DRA818.h> and you're good to go. You can use either the builtin UART [HardwareSoftware](https://www.arduino.cc/en/Reference/HardwareSoftware) or two digital pins of your choice and the [SoftwareSerial](https://www.arduino.cc/en/Reference/SoftwareSerial) library.
+
 ## API
 ### Constructor
 #### HardwareSerial
@@ -87,6 +90,15 @@ Must be called when a HardwareSerial connection to the DRA818 is used (aka when 
 Must be called when a SoftwareSerial connection to the DRA818 is used (aka when not using the builtin arduino UART but using digital pins). It's the same call than the previous call with a different serial type (SoftwareSerial instead of HardwareSerial)
 
 ```static DRA818* DRA818::configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low);```
+
+## Debug
+Debugging the communication with the DRA818 module is included in the code. It can be used to debug the communication between the arduino and the DRA818 module.
+
+First, enable debuging in the library by defining `DRA818_DEBUG` in `DRA818.h`. Then the DRA818 class exposes a `set_log(Stream *)` function and the `configure()` function takes another argument (`Stream *log`). 
+```
+dra = DRA818::configure(dra_serial, DRA818_VHF, 145.500, 145.500, 4, 8, 0, 0, DRA818_12K5, true, true, true, &Serial);
+```
+`&Serial` is a pointer to the builtin UART. The DRA818 library will send debug messages. See examples/debug.
 
 ## Thanks
 * [darksidelemm](https://github.com/darksidelemm) for its original module that gave me inspiration for the rewrite of the module: https://github.com/darksidelemm/dra818
