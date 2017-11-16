@@ -85,8 +85,9 @@ int DRA818::read_response() {
       LOG(write, ack[2]);
     }
   } while (ack[2] != 0xa && (millis() - start) < TIMEOUT);
-  LOG(write, '\n');
-
+#ifdef DRA818_DEBUG
+  if (ack[2] != 0xa) LOG(write, F("\r\n"));
+#endif
   LOG(print, F("Returned value="));
   LOG(println, ack[0] == '0' );
 
