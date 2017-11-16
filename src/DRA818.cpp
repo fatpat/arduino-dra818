@@ -156,37 +156,17 @@ int DRA818::filters(bool pre, bool high, bool low) {
   return read_response(); // SCAN function return 0 if there is a signal, 1 otherwise
 }
 
-static DRA818* DRA818::configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low
-#ifdef DRA818_DEBUG
-, Stream *log = NULL
-#endif
-) {
+static DRA818* DRA818::configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL) {
   DRA818 *dra = new DRA818(stream, type);
-  return DRA818::configure(dra, freq_rx, freq_tx, squelch, volume, ctcss_rx, ctcss_tx, bandwidth, pre, high, low
-#ifdef DRA818_DEBUG
-  , log
-#endif
-  );
+  return DRA818::configure(dra, freq_rx, freq_tx, squelch, volume, ctcss_rx, ctcss_tx, bandwidth, pre, high, low, log);
 }
 
-static DRA818* DRA818::configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low
-#ifdef DRA818_DEBUG
-, Stream *log = NULL
-#endif
-) {
+static DRA818* DRA818::configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL) {
   DRA818 *dra = new DRA818(stream, type);
-  return DRA818::configure(dra, freq_rx, freq_tx, squelch, volume, ctcss_rx, ctcss_tx, bandwidth, pre, high, low
-#ifdef DRA818_DEBUG
-  , log
-#endif
-  );
+  return DRA818::configure(dra, freq_rx, freq_tx, squelch, volume, ctcss_rx, ctcss_tx, bandwidth, pre, high, low, log);
 }
 
-static DRA818* DRA818::configure(DRA818 *dra, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low
-#ifdef DRA818_DEBUG
-, Stream *log = NULL
-#endif
-) {
+static DRA818* DRA818::configure(DRA818 *dra, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL) {
   int ret;
 #ifdef DRA818_DEBUG
   dra->set_log(log);

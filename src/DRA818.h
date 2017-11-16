@@ -17,7 +17,7 @@
 #define DRA818_UHF_MAX    470.0
 #define DRA818_12K5       0x0
 #define DRA818_25K        0x1
-#define DRA818_DEBUG
+//#define DRA818_DEBUG
 
 class DRA818 {
     public:
@@ -40,24 +40,17 @@ class DRA818 {
         // log Serial interface
         void set_log(Stream *log);
         Stream *log;
+#endif
 
         // all-in-one configuration functions
         static DRA818* configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL);
         static DRA818* configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL);
-#else
-        static DRA818* configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low);
-        static DRA818* configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low);
-#endif
 
     private:
         uint8_t type;
 
         int read_response();
 
-        static DRA818* configure(DRA818 *dra, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low
-#ifdef DRA818_DEBUG
-        , Stream *log = NULL
-#endif
-        );
+        static DRA818* configure(DRA818 *dra, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL);
 };
 #endif
