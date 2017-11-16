@@ -1,6 +1,48 @@
 /*
   debug.ino
 
+  A simple sketch that configure a DRA818V and scan all the frequencies in the 
+  range 134-174 MHz with a step of 12.5 kHz. 3 pins of the arduino are 
+  used (PD, RX and TX) (CAUTION the DRA818 runs @3.3v). Configure the 3 macros
+  and customize the DRA818::configure(...) call to your needs.
+
+  Define the macro DRA818_DEBUG in DRA818.h and recompile to activate the
+  debug functions of the library.
+  
+  Here is a sample output from the serial connection:
+
+  Booting ...
+  initializing I/O ... done
+  initializing DRA818 ... DRA818: log serial connection active
+  DRA818::handshake
+  -> AT+DMOCONNECT
+  <- +DMOCONNECT:0
+  Returned value=1
+  DRA818::group
+  -> AT+DMOSETGROUP=0,145.5000,145.5000,0000,4,0000
+  <- +DMOSETGROUP:0
+  Returned value=1
+  DRA818::volume
+  -> AT+DMOSETVOLUME=8
+  <- +DMOSETVOLUME:0
+  Returned value=1
+  DRA818::filters
+  -> AT+SETFILTER=1,1,1
+  <- +DMOSETFILTER:0
+  Returned value=1
+  done
+  Starting ... 
+  Scanning frequency 134.0000 kHz ...DRA818::scan
+  -> S+134.0000
+  <- S=1
+  Returned value=0
+ 
+  Scanning frequency 134.0125 kHz ...DRA818::scan
+  -> S+134.0125
+  <- S=1
+  Returned value=0
+ 
+
   Copyright (c) 2017, Jerome LOYET
 
   This library is free software; you can redistribute it and/or
