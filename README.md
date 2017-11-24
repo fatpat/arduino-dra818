@@ -40,7 +40,7 @@ void loop() {
 Must be called when a HardwareSerial connection to the DRA818 is used (aka when using the builtin arduino UART).
 
 ```DRA818(HardwareSerial *serial, uint8_t type);```
-* **serial** must be a SoftwareSerial object.
+* **serial** must be a HardwareSerial object.
 * **type** must be the DRA818 version used. Must be any of the following values:
   * ```DRA818_VHF```
   * ```DRA818_UHF```
@@ -95,6 +95,8 @@ It scans the wanted frequency.
 
 ```int DRA818::scan(float freq);```
 * **freq** is the frequency to scan
+
+**return value**: 1 if the scanned frequency is active, 0 otherwise
 ### All-in-one configuration routine
 The static ```configuration``` function can be called to setup the DRA818 all in once without calling different low level API functions without passing with constructor and low level API calls.
 #### HardwareSerial
