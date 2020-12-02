@@ -177,11 +177,11 @@ int DRA818::filters(bool pre, bool high, bool low) {
   LOG(print, F("-> "));
 
   SEND("AT+SETFILTER=");
-  SEND('0' + (char)pre);
+  SEND('0' + (char)(pre ? false: true)); // or !pre
   SEND(",");
-  SEND('0' + (char)high);
+  SEND('0' + (char)(high ? false: true)); // or !high
   SEND(",");
-  SEND('0' + (char)low);
+  SEND('0' + (char)(low ? false: true)); // or !low
   SEND("\r\n");
 
   return read_response(); // SCAN function return 0 if there is a signal, 1 otherwise
