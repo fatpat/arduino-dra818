@@ -73,6 +73,8 @@ void DRA818::set_log(Stream *log) {
 
 int DRA818::read_response() {
   char ack[3];
+  ack[0] = ack[1] = ack[2] = '\0';  // Just to quiet some warnings.
+
   LOG(print, F("<- "));
 
   ack[2]=0;
@@ -103,11 +105,11 @@ int DRA818::group(uint8_t bw, float freq_tx, float freq_rx, uint8_t ctcss_tx, ui
   CHECK(bw, <, DRA818_12K5);
   CHECK(bw, >, DRA818_25K);
 
-  CHECK(freq_rx, <, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
-  CHECK(freq_tx, <, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
+  CHECK(freq_rx, <, ((this->type & DRA818_BAND_FLAG) == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
+  CHECK(freq_tx, <, ((this->type & DRA818_BAND_FLAG) == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
 
-  CHECK(freq_rx, >, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
-  CHECK(freq_tx, >, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
+  CHECK(freq_rx, >, ((this->type & DRA818_BAND_FLAG) == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
+  CHECK(freq_tx, >, ((this->type & DRA818_BAND_FLAG) == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
 
   CHECK(ctcss_rx, >, CTCSS_MAX);
   CHECK(ctcss_tx, >, CTCSS_MAX);
@@ -159,7 +161,7 @@ int DRA818::scan(float freq) {
 }
 
 int DRA818::rssi() {
-  if (this->type & DRA868_FLAG == 0) {
+  if ((this->type & DRA868_FLAG) == 0) {
     LOG(println, F("WARNING: DRA818::rssi() only supported by DRA/SA868, not 818."));
     LOG(println, F("Construct your DRA818 object with `type = DRA868_[VU]HF` to enable rssi()."))
     return -1;
@@ -201,17 +203,17 @@ int DRA818::filters(bool pre, bool high, bool low) {
   return read_response(); // SCAN function return 0 if there is a signal, 1 otherwise
 }
 
-static DRA818* DRA818::configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL) {
+DRA818* DRA818::configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log) {
   DRA818 *dra = new DRA818(stream, type);
   return DRA818::configure(dra, freq_rx, freq_tx, squelch, volume, ctcss_rx, ctcss_tx, bandwidth, pre, high, low, log);
 }
 
-static DRA818* DRA818::configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL) {
+DRA818* DRA818::configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log) {
   DRA818 *dra = new DRA818(stream, type);
   return DRA818::configure(dra, freq_rx, freq_tx, squelch, volume, ctcss_rx, ctcss_tx, bandwidth, pre, high, low, log);
 }
 
-static DRA818* DRA818::configure(DRA818 *dra, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL) {
+DRA818* DRA818::configure(DRA818 *dra, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log) {
   int ret;
 #ifdef DRA818_DEBUG
   dra->set_log(log);
