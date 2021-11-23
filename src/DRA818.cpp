@@ -103,11 +103,11 @@ int DRA818::group(uint8_t bw, float freq_tx, float freq_rx, uint8_t ctcss_tx, ui
   CHECK(bw, <, DRA818_12K5);
   CHECK(bw, >, DRA818_25K);
 
-  CHECK(freq_rx, <, (this->type == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
-  CHECK(freq_tx, <, (this->type == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
+  CHECK(freq_rx, <, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
+  CHECK(freq_tx, <, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MIN : DRA818_UHF_MIN));
 
-  CHECK(freq_rx, >, (this->type == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
-  CHECK(freq_tx, >, (this->type == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
+  CHECK(freq_rx, >, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
+  CHECK(freq_tx, >, (this->type & DRA818_BAND_FLAG == DRA818_VHF ? DRA818_VHF_MAX : DRA818_UHF_MAX));
 
   CHECK(ctcss_rx, >, CTCSS_MAX);
   CHECK(ctcss_tx, >, CTCSS_MAX);
@@ -159,6 +159,11 @@ int DRA818::scan(float freq) {
 }
 
 int DRA818::rssi() {
+  if (this->type & DRA868_FLAG == 0) {
+    LOG(println, F("WARNING: DRA818::rssi() only supported by DRA/SA868, not 818."));
+    LOG(println, F("Construct your DRA818 object with `type = DRA868_[VU]HF` to enable rssi()."))
+    return -1;
+  }
   LOG(println, F("DRA818::rssi"));
   LOG(print, F("-> "));
 
