@@ -25,8 +25,16 @@
 #include <HardwareSerial.h>
 #include <SoftwareSerial.h>
 
+// Which bit of `type` to look at to determine the band
+#define DRA818_BAND_FLAG  0x1
+// Which bit of `type` to look at to determin whether it's an 818 or an 868
+#define DRA868_FLAG       0x2
+
 #define DRA818_VHF        0x0
 #define DRA818_UHF        0x1
+#define DRA868_VHF        (DRA818_VHF & DRA868_FLAG)
+#define DRA868_UHF        (DRA818_UHF & DRA868_FLAG)
+
 #define DRA818_VHF_MIN    134.0
 #define DRA818_VHF_MAX    174.0
 #define DRA818_UHF_MIN    400.0
