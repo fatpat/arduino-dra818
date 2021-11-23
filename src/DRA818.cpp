@@ -158,6 +158,15 @@ int DRA818::scan(float freq) {
   return read_response();
 }
 
+int DRA818::rssi() {
+  LOG(println, F("DRA818::rssi"));
+  LOG(print, F("-> "));
+
+  SEND("AT+RSSI?");
+
+  return read_response();
+}
+
 int DRA818::volume(uint8_t volume) {
   CHECK(volume, >, VOLUME_MAX);
   CHECK(volume, <, VOLUME_MIN);

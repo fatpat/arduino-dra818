@@ -48,6 +48,8 @@ class DRA818 {
         int scan(float freq);
         int volume(uint8_t volume);
         int filters(bool pre, bool high, bool low);
+        int rssi();
+
 
         // serial connection to DRA818
         Stream *serial;
