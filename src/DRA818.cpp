@@ -116,8 +116,8 @@ int DRA818::group(uint8_t bw, float freq_tx, float freq_rx, uint8_t ctcss_tx, ui
 
   CHECK(squelch, >, SQUELCH_MAX);
 
-  dtostrf(freq_tx, 8, 4, buf_rx);
-  dtostrf(freq_rx, 8, 4, buf_tx);
+  dtostrf(freq_tx, 8, 4, buf_tx);
+  dtostrf(freq_rx, 8, 4, buf_rx);
 
   sprintf(buffer, "AT+DMOSETGROUP=%01d,%s,%s,%04d,%c,%04d\r\n", bw, buf_tx, buf_rx, ctcss_tx, squelch + '0', ctcss_rx);
 
