@@ -163,7 +163,7 @@ int DRA818::scan(float freq) {
 int DRA818::rssi() {
   if ((this->type & DRA868_FLAG) == 0) {
     LOG(println, F("WARNING: DRA818::rssi() only supported by DRA/SA868, not 818."));
-    LOG(println, F("Construct your DRA818 object with `type = DRA868_[VU]HF` to enable rssi()."))
+    LOG(println, F("Construct your DRA818 object with `type = DRA868_[VU]HF` to enable rssi()."));
     return -1;
   }
   LOG(println, F("DRA818::rssi"));
