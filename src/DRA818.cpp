@@ -23,7 +23,9 @@
 #include <stdio.h>
 #include <Stream.h>
 #include <HardwareSerial.h>
+#if !defined (ESP32)
 #include <SoftwareSerial.h>
+#endif
 
 #define CTCSS_MAX           38
 #define SQUELCH_MAX         8
@@ -51,10 +53,13 @@ DRA818::DRA818(HardwareSerial *serial, uint8_t type) {
   serial->begin(SERIAL_SPEED, SERIAL_CONFIG);
   this->init((Stream *)serial, type);
 }
+
+#if !defined (ESP32)
 DRA818::DRA818(SoftwareSerial *serial, uint8_t type) {
   serial->begin(SERIAL_SPEED); // We can't configure bits/parity for SoftwareSerial, it's 8N1 as the DRA818
   this->init((Stream *)serial, type);
 }
+#endif
 
 void DRA818::init(Stream *serial, uint8_t type) {
   this->serial = serial;
@@ -203,10 +208,12 @@ int DRA818::filters(bool pre, bool high, bool low) {
   return read_response(); // SCAN function return 0 if there is a signal, 1 otherwise
 }
 
+#if !defined (ESP32)
 DRA818* DRA818::configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log) {
   DRA818 *dra = new DRA818(stream, type);
   return DRA818::configure(dra, freq_rx, freq_tx, squelch, volume, ctcss_rx, ctcss_tx, bandwidth, pre, high, low, log);
 }
+#endif
 
 DRA818* DRA818::configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log) {
   DRA818 *dra = new DRA818(stream, type);

@@ -23,7 +23,9 @@
 
 #include <Stream.h>
 #include <HardwareSerial.h>
+#if !defined (ESP32)
 #include <SoftwareSerial.h>
+#endif
 
 // Which bit of `type` to look at to determine the band
 #define DRA818_BAND_FLAG  0x1
@@ -47,7 +49,9 @@ class DRA818 {
     public:
         // Constructors
         DRA818(HardwareSerial *serial, uint8_t type);
+#if !defined (ESP32)
         DRA818(SoftwareSerial *serial, uint8_t type);
+#endif
         void init(Stream *serial, uint8_t type);
 
         // low level DRA818 function
@@ -69,7 +73,9 @@ class DRA818 {
 #endif
 
         // all-in-one configuration functions
+#if !defined (ESP32)
         static DRA818* configure(SoftwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL);
+#endif
         static DRA818* configure(HardwareSerial *stream, uint8_t type, float freq_rx, float freq_tx, uint8_t squelch, uint8_t volume, uint8_t ctcss_rx, uint8_t ctcss_tx, uint8_t bandwidth, bool pre, bool high, bool low, Stream *log = NULL);
 
     private:
