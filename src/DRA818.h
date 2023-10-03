@@ -36,12 +36,12 @@
 
 #define DRA818_VHF        0x0
 #define DRA818_UHF        0x1
-#define DRA868_VHF        (DRA818_VHF & DRA868_FLAG)    // Not sure this model actually exist, leave it here for backward compatibility
-#define DRA868_UHF        (DRA818_UHF & DRA868_FLAG)    // Not sure this model actually exist, leave it here for backward compatibility
-#define SA818_VHF         (DRA818_VHF & SA_MODEL_FLAG)
-#define SA818_UHF         (DRA818_UHF & SA_MODEL_FLAG)
-#define SA868_VHF         (SA818_VHF & DRA868_FLAG)
-#define SA868_UHF         (SA818_UHF & DRA868_FLAG)
+#define DRA868_VHF        (DRA818_VHF | DRA868_FLAG)    // Not sure this model actually exist, leave it here for backward compatibility
+#define DRA868_UHF        (DRA818_UHF | DRA868_FLAG)    // Not sure this model actually exist, leave it here for backward compatibility
+#define SA818_VHF         (DRA818_VHF | SA_MODEL_FLAG)
+#define SA818_UHF         (DRA818_UHF | SA_MODEL_FLAG)
+#define SA868_VHF         (SA818_VHF | DRA868_FLAG)
+#define SA868_UHF         (SA818_UHF | DRA868_FLAG)
 
 #define DRA818_VHF_MIN    134.0
 #define DRA818_VHF_MAX    174.0
